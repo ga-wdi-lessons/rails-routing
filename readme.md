@@ -30,45 +30,91 @@ Q: Who can walk me through the rMVC pattern, highlighting where the router is an
 
 ## Routes (10 min)
 
-You guys dove into Rails' `routes.rb` file in the MVC class and created individual routes for pages using Sinatra-like syntax.
-* **NOTE:** The `routes.rb` file is located in the `config` folder of your Rails application.
+Fork/clone the [tunr_rails_routes_resources repo](https://github.com/ga-wdi-exercises/tunr_rails_routes_resources).  This provides starter code for this lesson. This repo also contains a solution branch containing all the code we'll be executing today.
 
-A route to our index page would look like this:
+You guys dove into Rails' `config/routes.rb` file in the MVC class and created individual routes for pages.
+
+Q. What does a route to the index page for artists look like?
+---
+
 ```rb
 # index
 get "/artists", to "artists#index"
 ```
 
-This would look the exact same for our Song model
-* Just replace the model reference in the HTTP request and controller method.
+Q. And the show page for a song?
+---
+```rb
+# show
+get "/artists/:id", to "artists#show"
+```
 
-You already took care of this in an earlier class, but we can also define the default route that is triggered when a user visits the home page of our application using the `root` method.
 
-* In the below example we direct the user to our artists index page when the root route is requested.
+## TPS: What happens when we visit "http://localhost:3000/"?  Why? (1/2/2, 5 min)
+
+> A. We see a listing of Artists.
+
+> Why? A "root" route is defined.  When we visit http://localhost:3000/, we trigger the index action in our Artists controller.
 
 ```rb
-# When we visit http://localhost:3000/, we trigger the index action in our Artists controller
 root :to => "artists#index"
 ```
 
-## Resourceful Routes (5 / 25)
 
-During the helpers class you learned a bit of Rails wizardry that allowed you to generate all of your application's RESTful routes using one word: **resources**!
-* Explicitly tells Rails that we will be using RESTful routes.
-* Generates path helpers, which we'll look at shortly.
+## What Routes? (10 min)
 
-```rb
-# This is all we need to generate the RESTful routes for a model
-resources :artists
-resources :songs
+Q: How do we find out what routes our app handles requests for?
+---
 
-# Even quicker: put them all on a single line
-resources :artists, :songs
+Rails docs are awesome!  Familiarize yourself with the command and the output.
+
+http://guides.rubyonrails.org/routing.html#inspecting-and-testing-routes
+
+> To get a complete list of the available routes in your application, visit http://localhost:3000/rails/info/routes in your browser while your server is running in the **development** environment. You can also execute the `rake routes` command in your terminal.
+
+Here's some simplified output.  We've removed some data to focus on the HTTP Verb, the URI Pattern, and the Controller Action.
+Note the "root" route and the duplication.  A combination of HTTP Verb (or Method) and URI (or Path) are required to identify a specific Controller Action.
+
+```bash
+HTTP Verb  URI Pattern       Controller#Action
+-----------------------------------------------
+GET        /                 artists#index
+GET        /artists          artists#index
+POST       /artists          artists#create
+GET        /artists/new      artists#new
+GET        /artists/:id/edit artists#edit
+GET        /artists/:id      artists#show
+PATCH      /artists/:id      artists#update
+PUT        /artists/:id      artists#update
+DELETE     /artists/:id      artists#destroy
+
 ```
 
-`resources` is Rails' preferred method of RESTfully using the router.
-* `resources` assumes by Rails convention that you are using properly named controllers -- in this case, `artists_controller.rb` and `songs_controller.rb` -- and connects our routes -- also properly-named -- to them.
-<br><br>
+### `rake routes`
+
+* Open up your terminal and, in the same folder as your application, type in `rake routes`.  You should see something like this.
+
+```bash
+Prefix        Verb   URI Pattern                 Controller#Action
+
+artists       GET    /artists(.:format)          artists#index
+          POST   /artists(.:format)          artists#create
+new_artist    GET    /artists/new(.:format)      artists#new
+edit_artist   GET    /artists/:id/edit(.:format) artists#edit
+artist        GET    /artists/:id(.:format)      artists#show
+          PATCH  /artists/:id(.:format)      artists#update
+          PUT    /artists/:id(.:format)      artists#update
+          DELETE /artists/:id(.:format)      artists#destroy
+songs         GET    /songs(.:format)            songs#index
+          POST   /songs(.:format)            songs#create
+new_song      GET    /songs/new(.:format)        songs#new
+edit_song     GET    /songs/:id/edit(.:format)   songs#edit
+song          GET    /songs/:id(.:format)        songs#show
+          PATCH  /songs/:id(.:format)        songs#update
+          PUT    /songs/:id(.:format)        songs#update
+          DELETE /songs/:id(.:format)        songs#destroy
+```
+
 
 ## Named Route Helpers
 
@@ -76,60 +122,66 @@ Looking at the output, we see the first column is "Prefix".  Rails provides help
 
 ### You Do: Research Named Route Helpers (aka Path and URL Helpers) (10 min)
 
-If you're ever confused as to what routes are available to you based on how you have set up your `routes.rb` file, Ruby has a handy tool that tells you.
-* Open up your terminal and, in the same folder as your application, type in `rake routes`.
+Back to the docs... read about [Path Helpers](http://guides.rubyonrails.org/routing.html#path-and-url-helpers)
+
+Q: What are Helpers, in general, in Rails?  How do Path Helpers fit into that category?  What do they look like?
+---
+
+> **Helpers** codify Rails conventions.  They write html using Rails or, in the case of custom Helpers, our project's conventions.
+
+> **Path helpers** are methods which provide the urls (and paths) to a Resource.  We build them using the prefixes from `rake routes`.
+
+Looking at this output from `rake routes`,
 
 ```bash
-Prefix      Verb   URI Pattern                 Controller#Action
-root        GET    /                           artists#index
-songs       GET    /songs(.:format)            songs#index
-artists     GET    /artists(.:format)          artists#index
-            POST   /artists(.:format)          artists#create
-new_artist  GET    /artists/new(.:format)      artists#new
-edit_artist GET    /artists/:id/edit(.:format) artists#edit
-artist      GET    /artists/:id(.:format)      artists#show
-            PATCH  /artists/:id(.:format)      artists#update
-            PUT    /artists/:id(.:format)      artists#update
-            DELETE /artists/:id(.:format)      artists#destroy
-            GET    /songs(.:format)            songs#index
-            POST   /songs(.:format)            songs#create
-new_song    GET    /songs/new(.:format)        songs#new
-edit_song   GET    /songs/:id/edit(.:format)   songs#edit
-song        GET    /songs/:id(.:format)        songs#show
-            PATCH  /songs/:id(.:format)        songs#update
-            PUT    /songs/:id(.:format)        songs#update
-            DELETE /songs/:id(.:format)        songs#destroy
+Prefix        Verb   URI Pattern                 Controller#Action
+
+artists       GET    /artists(.:format)          artists#index
+          POST   /artists(.:format)          artists#create
+new_artist    GET    /artists/new(.:format)      artists#new
+edit_artist   GET    /artists/:id/edit(.:format) artists#edit
+artist        GET    /artists/:id(.:format)      artists#show
 ```
 
-You've seen most of this information before: HTTP request verbs, routes and controller actions.
-* Path helpers are new, at least from what we learned in Sinatra. You started to learn about them during the helpers class.
-<br><br>
+Q: What named route helper will return the url to list all Artists?
 
-### [Path Helpers](https://github.com/ga-dc/curriculum/tree/master/05-mvc-with-rails/rails-helpers)  
-**Q:** Can somebody remind me what helpers are and how path helpers fit into that category?
-* **Helpers** make our lives easier and save us the trouble of writing out long, repetitive code.
-* **Path helpers** are references to routes and controller actions.
-* Build them using the prefixes from `rake routes`.
-* often times they'll be placed in views, but are also utilized elsewhere.
+> A. `artists_url`
 
-Path helpers vary between routes
-* `index`: `artists_path`
-* Why do we add `_path`? Generates a relative path (vs. `_url`).
-* **Q:** What about the path helper `edit`? How is it different from `index`. Takes an object as an argument.
-  * `edit_artist_path( some_artist )    # "/artists/:id/edit"`
+Q: What named route helper will return the path to show an Artist?
 
-Only four path helpers for each model.
-* Some paths can be used for multiple routes (e.g., `artist_path` covers `artists#show` `#update` and `#destroy`).
-* **Q:** Their purpose depends on context. How does HTML know which version of a route to run?
-<br><br>
+> A. `artist_path(@artist)`
 
-## Routes and Helpers (5 / 40)
+Note that to indicate which artist we should show, we need to pass a reference to an artist.
 
-With path helpers, we can tidy up the other helpers you guys have already implemented in Tunr.
-* Q: What sort of helpers have we already encountered this week?
-<br><br>
 
-### [Link Helpers](http://mixandgo.com/blog/how-to-use-link_to-in-rails)
+Q: Where do we utilize Path Helpers in Rails?
+---
+
+> A.  We use Path Helpers in views, controllers, and helpers.
+
+Q. Why not in models?
+
+> A. Models do not usually know about their place within the request/response cycle.  They are focused on the Business Rules and Persistence, not the User Interaction.
+
+
+Q. When do we use the `_path` helper? The `_url` helper?
+---
+
+> A. We use `_url` helpers when redirecting.  Use `_path` for everything else.
+
+
+Q. Why?
+
+> A. The web expects it.  https://www.viget.com/articles/rails-named-routes-path-vs-url
+
+
+
+### Using Named Route Helpers
+---
+
+Using path helpers, we can tidy up the other helpers you guys have already implemented in Tunr.
+
+e.g. [Link Helpers](http://mixandgo.com/blog/how-to-use-link_to-in-rails)
 
 ```rb
 # views/artists/index.html.erb
@@ -143,49 +195,44 @@ With path helpers, we can tidy up the other helpers you guys have already implem
 <h2>Artists <%= link_to "(+)", new_artist_path %></h2>
 ```
 
-### [Form Helpers](http://guides.rubyonrails.org/form_helpers.html#binding-a-form-to-an-object)
+### Review Routes
+
+http://guides.rubyonrails.org/routing.html#generating-paths-and-urls-from-code
+
+Q. What would be in the params hash after we clicked that link (to `/patients/17`)?
+---
+
+``` ruby
+# params
+{  id: "17",
+  controller: "patients",
+  action: "show"
+}
+```
+
+ProTip: params values are always strings.  ActiveRecord methods (e.g. #find), will convert it to an integer.  This means you can use this in your url `/artists/1-YeahYeahYeahs`.
+
+
+## RESTful Routes (5 min)
+
+REST attempts to view everything on the web as a Resource. RESTful resources are expected to be managed via specific routes.  Rails makes it easy to generate RESTful routes, via `resources`.
+* Explicitly tells Rails that we will be using RESTful routes.
+* Generates path helpers.
 
 ```rb
-# views/artists/new.html.erb
-
-# From this...
-<form method="post" action="/artists">
-  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-
-  <label>Name</label>
-  <input type="text" name="artist[name]">
-
-  <label>Photo Url</label>
-  <input type="text" name="artist[photo_url]">
-
-  <label>Nationality</label>
-  <input type="text" name="artist[nationality]">
-
-  <input type="submit" value="Create Artist">
-</form>
+# This is all we need to generate the RESTful routes for a model
+resources :artists
+resources :songs
 ```
 
-```html
-# ...to this
-<%= form_for @artist do |f| %>
-  <%= f.label :name %>
-  <%= f.text_field :name %>
+* `resources` creates routes using a combination of REST and Rails conventions.  It assumes properly named controllers -- in this case, `artists_controller.rb` and `songs_controller.rb` -- and actions.
 
-  <%= f.label :photo_url %>
-  <%= f.text_field :photo_url %>
+Review the output of `rake routes`.
 
-  <%= f.label :nationality %>
-  <%= f.text_field :nationality %>
 
-  <%= f.submit %>
-<% end %>
-```
-<br><br>
-
-[N.B. the Rails docs are awesome!](http://guides.rubyonrails.org/routing.html#nested-resources)
 ## Nested Resources (15 min)
 
-The way our app is currently routed is fine. Songs and artists have their very own resources and doesn't depend on the other. We can, however, change our domain a bit. We can actually nest our resources. We want to be able to visit urls like this:
+The way our app is currently routed is fine. Songs and artists have their very own resources and doesn't depend on the other. We can, however, change our domain a bit.  We can make Songs depend on their Artist. We indicate, and control this, by nesting our resources. We want to be able to visit urls like this:
 
 `http://www.tu.nr/artists/3/songs/12`
 
@@ -197,9 +244,10 @@ Q. What would it mean to have a URL like that? Why do we do it this way?
 > A.
   * It concisely reflects our data structure: all songs are dependent on an artist.
   * Also allows users to access specific information using the URL.
-* Ultimately, we want to structure our routes so that all Songs exist in the context of a parent Artist.
 
-> The reasons might not be so apparent for routes like show, edit, update and destroy because we have access to a song ID in the url anyway. But by using nested resources, it's easier to create a song because we have the artists id in the url. Or maybe we want the songs index route to be namespaced under an artist.
+Ultimately, we want to structure our routes so that all Songs exist in the context of a parent Artist.
+
+> The reasons might not be so apparent for routes like show, edit, update and destroy because we have access to a song ID in the url anyway. But by using nested resources, it's easier to create a song because we have the artists id in the url. Or maybe we want the songs index route to be namespaced under an artist. We can **ensure** that a Song is associated with a specific Artist.
 
 > This brings us to another side note. Ultimately your domain model is just that, yours. It's up to you to decide whats the right fit. Which tables make the most sense for the problems that I face in my application. Which associations should I use to best facilitate querying my database. Which resources should I have and under which namespaces? These are the questions developers ask themselves each and every time a new application is being created. We're just here to teach you some tools to answer these questions for yourself.
 
@@ -231,17 +279,29 @@ get "/artists/:artist_id/songs" to "songs#index"
 get "/artists/:artist_id/songs/:id" to "songs#show"
 ```
 
-**YOU DO:** Spend the next 3 minutes writing out the individual routes for our nested resources model.
-* We will not be replacing our resources statements in the `routes.rb` file with this.
-  * Rephrase and answer why? Why are we writing these out?
-* **DO NOT** check our answers with `rake routes` quite yet...
 
-Let's update our router...
+### YOU DO: Individual routes (3 min)
+
+Docs are your friend: [Nested Resources](http://guides.rubyonrails.org/routing.html#nested-resources)
+
+1. Write out the individual routes for our nested resources model
+  * We will not be replacing our resources statements in the `routes.rb` file with this.
+  * **DO NOT** check our answers with `rake routes` quite yet...
+- Once you have them written out, update "config/routes.rb".  Indicate that the Song resources are nested within an Artist.
+- Check your answers above against with `rake routes`.
+
+
+
+## BREAK (10 min)
+
+Updates to "config/routes.rb"
 
 ```rb
 # Going from this...
 resources :artists, :songs
+```
 
+```rb
 # ...to this.
 resources :artists do
   resources :songs
@@ -258,15 +318,12 @@ Okay, so our `routes.rb` file is updated with nested resources. Let's see them i
 ![First error](images/first-error.png)
 
 That's okay. You're going to spend the next hour fixing it!
-* Spend 5 minutes looking through your application and think about what we need to change in order to accommodate our new routing system.
+
+### TPS: What do we need to change? (3/2, 5 min)
+
+* Look through your application and think about what we need to change in order to accommodate our new routing system.
 * Don't worry about solving the problem immediately. Start by identifying files we need to change.
 
-
-### Bonuses
-If you find yourself moving along faster than my pace, try implementing the following...
-* A third model for Genre that has a `belongs_to` relationship with Artists.
-* There are also some advanced topics included in "Additional Reading" at the bottom of the lesson plan.
-<br><br>
 
 ### Let's look at `rake routes` again...
 
@@ -276,42 +333,57 @@ Q. Has anything changed?
 * Our HTTP requests (URI Pattern) match the individual nested routes we just talked about (e.g., `:artist_id`).
 * Our Song path helpers are now prefixed with artist (e.g., `artist_songs`, `new_artist_song`).
 * Our controller actions are the same.
-  * **Q:** Are we going to need to change anything in our controllers?
 
-```rb
+```sh
 Prefix            Verb   URI Pattern                                  Controller#Action
 root              GET    /                                            artists#index
 artist_songs      GET    /artists/:artist_id/songs(.:format)          songs#index
-                  POST   /artists/:artist_id/songs(.:format)          songs#create
+             POST   /artists/:artist_id/songs(.:format)          songs#create
 new_artist_song   GET    /artists/:artist_id/songs/new(.:format)      songs#new
 edit_artist_song  GET    /artists/:artist_id/songs/:id/edit(.:format) songs#edit
 artist_song       GET    /artists/:artist_id/songs/:id(.:format)      songs#show
-                  PATCH  /artists/:artist_id/songs/:id(.:format)      songs#update
-                  PUT    /artists/:artist_id/songs/:id(.:format)      songs#update
-                  DELETE /artists/:artist_id/songs/:id(.:format)      songs#destroy
+             PATCH  /artists/:artist_id/songs/:id(.:format)      songs#update
+             PUT    /artists/:artist_id/songs/:id(.:format)      songs#update
+             DELETE /artists/:artist_id/songs/:id(.:format)      songs#destroy
 artists           GET    /artists(.:format)                           artists#index
-                  POST   /artists(.:format)                           artists#create
+             POST   /artists(.:format)                           artists#create
 new_artist        GET    /artists/new(.:format)                       artists#new
 edit_artist       GET    /artists/:id/edit(.:format)                  artists#edit
 artist            GET    /artists/:id(.:format)                       artists#show
-                  PATCH  /artists/:id(.:format)                       artists#update
-                  PUT    /artists/:id(.:format)                       artists#update
-                  DELETE /artists/:id(.:format)                       artists#destroy
+             PATCH  /artists/:id(.:format)                       artists#update
+             PUT    /artists/:id(.:format)                       artists#update
+             DELETE /artists/:id(.:format)                       artists#destroy
 ```
+
+Q. Are we going to need to change anything in our app?
+---
 
 Having seen this, let's make a To-Do list of things to change in our Rails app so that we can successfully use nested resources.  
   1. Link Helpers  
   2. Form Helpers  
   3. Songs Controller  
 
+
+## YOU DO: Fix the app!
+
+  For the rest of the class we'll be working to fix the app.  Feel free to follow along, or go at your own pace.
+
+  ### Bonuses
+  If you find yourself moving along faster than my pace, try implementing the following...
+  * A third model for Genre that has a `belongs_to` relationship with Artists.
+  * There are also some advanced topics included in "Additional Reading" at the bottom of the lesson plan.
+
 ### Let's take another look at that error...
 
 ![First error](images/first-error.png)
 
-How do we fix this? **DELETE IT**.
+Q. How do we fix this?
+---
+
+> A. **DELETE IT**.
 * The original link took us to a list of all the songs in our application.
 * While getting rid of it may be a bad move from a usability standpoint, by implementing nested resources we made the decision that songs will never exist independent from an artist.
-<br><br>
+
 
 ### Let's click on an artist...
 
@@ -375,7 +447,7 @@ So now what? The link helper for an individual song inside of our .each enumerat
 </ul>
 ```
 
-**WE DO:** Help me out with this one.
+Some thoughts:
 * We don't have a path helper in the above example. What page are we trying to link to?
 * So which path helper do we need to add?
 * Do we need to feed it a variable? If so, how many?
@@ -393,12 +465,12 @@ So now what? The link helper for an individual song inside of our .each enumerat
 </ul>
 ```
 
-**YOU DO:** From an artist show page, click on a song. You should get an error.
-* I want you to try fixing the `songs/show.html.erb` file.
+
+From an artist show page, click on a song. You should get an error.
+* Try fixing the `songs/show.html.erb` file.
 * **HINT:** You might have to add an instance variable to `songs_controller.rb`.
   * Remember, our song routes don't look the same as they did before!
-* I'll check in after 5 minutes.
-<br><br>
+
 
 ### Form Helpers
 
@@ -455,7 +527,8 @@ Now let's modify our form.
 <% end %>
 ```
 
-**WE DO:** So that takes care of the form. Now we need to fix the `create` controller action in `songs_controller.rb` so that we can add songs to artists!
+
+That takes care of the form. Now we need to fix the `create` controller action in `songs_controller.rb` so that we can add songs to artists!
   * We need an artist to add a song to, right? How do we set that up.
   * How should we modify `@song` so that it's saved to the proper artist?
   * Where would it make most sense to redirect to? Let's try the artist show page -- what path should be use?
@@ -472,7 +545,8 @@ def create
 end
 ```
 
-**YOU DO:** Now you do the rest! Debug the following pages/forms so that they don't generate any errors upon loading/submission.
+
+Now you do the rest! Debug the following pages/forms so that they don't generate any errors upon loading/submission.
 * `/views/artists`
   * `edit.html.erb`
   * `index.html.erb`
@@ -501,6 +575,9 @@ It seems pretty daunting, but you won't have to change anything beyond link help
 
 Spend the remaining class-time either working on your homework or you can ask me questions on anything you've learned this week.
 
-## Sample Quiz Questions
 
-- List the routes provided using the resources method and the associated action for each
+## Conclusion
+
+- List the routes provided using the `resources :person` method and the associated action for each
+- Why would we nest resource routes?
+- How can we see the routes our app supports?
