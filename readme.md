@@ -39,14 +39,14 @@ Q. What does a route to the index page for artists look like?
 
 ```rb
 # index
-get "/artists", to "artists#index"
+get "/artists", to: "artists#index"
 ```
 
 Q. And the show page for a song?
 ---
 ```rb
 # show
-get "/artists/:id", to "artists#show"
+get "/artists/:id", to: "artists#show"
 ```
 
 
@@ -57,7 +57,7 @@ get "/artists/:id", to "artists#show"
 > Why? A "root" route is defined.  When we visit http://localhost:3000/, we trigger the index action in our Artists controller.
 
 ```rb
-root :to => "artists#index"
+root to: "artists#index"
 ```
 
 
