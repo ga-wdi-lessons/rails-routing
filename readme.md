@@ -40,7 +40,6 @@ and then map those routes to their appropriate controller actions.
 <details>
 <summary>**Q**. What does the individual route to the `index` page for `artists` look like?</summary>
 
-
 ```rb
 # index
 get "/artists", to: "artists#index"
@@ -57,7 +56,6 @@ get "/artists/:id", to: "artists#show"
 ```
 
 </details>
-
 
 
 <details>
@@ -87,44 +85,13 @@ http://guides.rubyonrails.org/routing.html#inspecting-and-testing-routes
 Here's some simplified output.  We've removed some data to focus on the HTTP Verb, the URI Pattern, and the Controller Action.
 Note the "root" route and the duplication.  A combination of HTTP Verb (or Method) and URI (or Path) are required to identify a specific Controller Action.
 
-```bash
-HTTP Verb  URI Pattern       Controller#Action
------------------------------------------------
-GET        /                 artists#index
-GET        /artists          artists#index
-POST       /artists          artists#create
-GET        /artists/new      artists#new
-GET        /artists/:id/edit artists#edit
-GET        /artists/:id      artists#show
-PATCH      /artists/:id      artists#update
-PUT        /artists/:id      artists#update
-DELETE     /artists/:id      artists#destroy
-```
+![artist-resources](./images/readme-3.png)
 
 ### `rake routes`
 
 * Open up your terminal and, in the same folder as your application, type in `rake routes`.  You should see something like this.
 
-```bash
-Prefix        Verb   URI Pattern                 Controller#Action
-
-artists       GET    /artists(.:format)          artists#index
-              POST   /artists(.:format)          artists#create
-new_artist    GET    /artists/new(.:format)      artists#new
-edit_artist   GET    /artists/:id/edit(.:format) artists#edit
-artist        GET    /artists/:id(.:format)      artists#show
-              PATCH  /artists/:id(.:format)      artists#update
-              PUT    /artists/:id(.:format)      artists#update
-              DELETE /artists/:id(.:format)      artists#destroy
-songs         GET    /songs(.:format)            songs#index
-              POST   /songs(.:format)            songs#create
-new_song      GET    /songs/new(.:format)        songs#new
-edit_song     GET    /songs/:id/edit(.:format)   songs#edit
-song          GET    /songs/:id(.:format)        songs#show
-              PATCH  /songs/:id(.:format)        songs#update
-              PUT    /songs/:id(.:format)        songs#update
-              DELETE /songs/:id(.:format)        songs#destroy
-```
+![rake-routes](./images/readme-4.png)
 
 ## Named Route Helpers
 
@@ -166,15 +133,7 @@ prefix + _path = Path Helper
 
 Looking at this output from `rake routes`,
 
-```bash
-Prefix        Verb   URI Pattern                 Controller#Action
-
-artists       GET    /artists(.:format)          artists#index
-              POST   /artists(.:format)          artists#create
-new_artist    GET    /artists/new(.:format)      artists#new
-edit_artist   GET    /artists/:id/edit(.:format) artists#edit
-artist        GET    /artists/:id(.:format)      artists#show
-```
+![artist-rake-routes](./images/readme-6.png)
 
 <!-- Artists Index url  -->
 <details>
@@ -241,7 +200,7 @@ http://guides.rubyonrails.org/routing.html#generating-paths-and-urls-from-code
 <details>
 <summary>**Q**. What can you expect the `params` hash to look like after we go to the url `/artists/9` in our browser?</summary>
 
-```
+```rb
 # params
 {  id: "9",
   controller: "artists",
@@ -257,19 +216,16 @@ http://guides.rubyonrails.org/routing.html#generating-paths-and-urls-from-code
 ## RESTful Routes (5 min)
 
 REST attempts to view everything on the web as a Resource. RESTful resources are expected to be managed via specific routes.  Rails makes it easy to generate RESTful routes, via `resources`.
+
+![resources-artist-songs](./images/readme-8.png)
+
+These lines:
+
 * Explicitly tells Rails that we will be using RESTful routes.
 * Generates path helpers.
-
-```rb
-# This is all we need to generate the RESTful routes for a model
-resources :artists
-resources :songs
-```
-
 * `resources` creates routes using a combination of REST and Rails conventions.  It assumes properly named controllers -- in this case, `artists_controller.rb` and `songs_controller.rb` -- and actions.
 
-Review the output of `rake routes`.
-
+Let's review the output of `rake routes`.
 
 ## Nested Resources (15 min)
 
@@ -294,17 +250,12 @@ Ultimately, we want to structure our routes so that all `Songs` exist in the con
 
 So our ideal `Song` `index` will look something like this...
 
-```rb
-# songs#index
-get "/artists/:id/songs" to "songs#index"
-```
+![new-songs-index](./images/readme-9.png)
+
 
 And our `show` route will look something like this...
 
-```rb
-# songs#show
-get "/artists/:id/songs/:id" to "songs#show"
-```
+![new-songs-show](./images/readme-10.png)
 
 **Q**. Given this route `artists/7/songs/14`, what do you think would be in the `params` hash for this route?
 ---
@@ -314,27 +265,16 @@ get "/artists/:id/songs/:id" to "songs#show"
 
 Exactly!  We need to reference our `Artist` ID separate from our `Song` ID.  Our routes need to look something more like this...
 
-```rb
-# We rename the first :id to :artist_id to make clear that it is the :id number of the Artist in question.
-get "/artists/:artist_id/songs" to "songs#index"
-get "/artists/:artist_id/songs/:id" to "songs#show"
-```
+![new-songs-index-and-show](./images/readme-11.png)
 
 ## BREAK (10 min)
 
 Updates to "config/routes.rb"
 
-```rb
-# Going from this...
-resources :artists, :songs
-```
+![old-routes](./images/readme-12.png)
 
-```rb
-# ...to this.
-resources :artists do
-  resources :songs
-end
-```
+![new-routes](./images/readme-13.png)
+
 
 ## Let's implement nested routes in Tunr! (60 min)
 
@@ -360,26 +300,8 @@ That's okay. You're going to spend the next hour fixing it!
 * Our Song path helpers are now prefixed with artist (e.g., `artist_songs`, `new_artist_song`).
 * Our controller actions are the same.
 
-```sh
-Prefix            Verb   URI Pattern                                  Controller#Action
-root              GET    /                                            artists#index
-artist_songs      GET    /artists/:artist_id/songs(.:format)          songs#index
-                  POST   /artists/:artist_id/songs(.:format)          songs#create
-new_artist_song   GET    /artists/:artist_id/songs/new(.:format)      songs#new
-edit_artist_song  GET    /artists/:artist_id/songs/:id/edit(.:format) songs#edit
-artist_song       GET    /artists/:artist_id/songs/:id(.:format)      songs#show
-                  PATCH  /artists/:artist_id/songs/:id(.:format)      songs#update
-                  PUT    /artists/:artist_id/songs/:id(.:format)      songs#update
-                  DELETE /artists/:artist_id/songs/:id(.:format)      songs#destroy
-artists           GET    /artists(.:format)                           artists#index
-                  POST   /artists(.:format)                           artists#create
-new_artist        GET    /artists/new(.:format)                       artists#new
-edit_artist       GET    /artists/:id/edit(.:format)                  artists#edit
-artist            GET    /artists/:id(.:format)                       artists#show
-                  PATCH  /artists/:id(.:format)                       artists#update
-                  PUT    /artists/:id(.:format)                       artists#update
-                  DELETE /artists/:id(.:format)                       artists#destroy
-```
+![new-rake-routes](./images/readme-14.png)
+
 
 **Q**. Are we going to need to change anything in our app?
 ---
@@ -418,20 +340,13 @@ Another error! What went wrong this time?
 
 Our app does not like the `new_song_path` we used in a link helper in our `artists/show.html.erb` file.
 
-```html
-# /views/artists/show.html.erb
+![old-song-path](./images/readme-15.png)
 
-<h3>Songs <%= link_to "(+)", new_song_path %></h3>
-```
 
 What do we need to replace this path helper with?
 * **HINT:** Look at `rake routes`!
 
-```html
-# /views/artists/show.html.erb
-
-<h3>Songs <%= link_to "(+)", new_artist_song_path %></h3>
-```
+![new-song-path](./images/readme-16.png)
 
 By nesting resources, `new_song_path` became `new_artist_song_path` since every `song` we create is now created in the context of an `artist`.
 * But our app is still giving us an error. WHY?!
@@ -443,12 +358,8 @@ You'll notice that we're getting a different error this time that ends with: `mi
 **Q**. What else we have to do to our link helper to fix this?
 ---
 
-```html
-# /views/artists/show.html.erb
+![fixed-song-path](./images/readme-17.png)
 
-# Feed @artist as an argument to the path helper
-<h3>Songs <%= link_to "(+)", new_artist_song_path( @artist ) %></h3>
-```
 
 We need to feed our `new_artist_song_path` helper an `artist` as a **variable**. Now our app knows which `artist` it is rendering a new `song` form for.  
 
@@ -458,35 +369,14 @@ And that'll do it. Let's refresh our page...
 
 So now what? The link helper for an individual song inside of our .each enumerator isn't working.
 
-```html
-# /views/artists/show.html.erb
-
-<ul>
-  <% @artist.songs.each do |song| %>
-    <li>
-      <%= link_to "#{song.title} (#{song.album})", song %>
-    </li>
-  <% end %>
-</ul>
-```
+![old-artist-show](./images/readme-18.png)
 
 Some thoughts:
 * We don't have a path helper in the above example. What page are we trying to link to?
 * So which path helper do we need to add?
 * Do we need to feed it a variable? If so, how many?
 
-```html
-# Feed the path helper an argument for @artist
-# As well as songs, since each link goes to a particular song
-# We use the iteration variable for song since we're in an enumerator
-<ul>
-  <% @artist.songs.each do |song| %>
-    <li>
-      <%= link_to "#{song.title} (#{song.album})", artist_song_path( @artist, song ) %>
-    </li>
-  <% end %>
-</ul>
-```
+![new-artist-show](./images/readme-19.png)
 
 From an `artist` `show` page, click on a `song`. You should get an error.
 * Try fixing the `songs/show.html.erb` file.
@@ -506,65 +396,28 @@ Looks like our form is trying to access a `/songs` route.
 * Our application does not support that particular route.
 * Let's take a look at `songs/new.html.erb` and `songs_controller.rb` and see how we can fix this...
 
-```html
-# /views/songs/new.html.erb
+![old-song-form](./images/readme-20.png)
 
-<%= form_for @song do |f| %>
-  # form contents
-<% end %>
-```
-
-```rb
-# /controllers/songs_controller.rb
-
-# new
-def new
-  @song = Song.new
-end
-```
+![old-song-controller](./images/readme-21.png)
 
 We need to associate each new song with an artist. To do that, we need to provide our `form_for` helpers with **both** an `artist` and `song` as arguments.
 * That means we first need to define the `artist` in question in our controller action. Then we can modify our form.
 
-```rb
-# /controllers/songs_controller.rb
-
-# new
-def new
-  @artist = Artist.find(params[:artist_id])
-  @song = @artist.songs.new
-end
-```
+![new-song-controller](./images/readme-22.png)
 
 Now let's modify our form.
 * When feeding multiple arguments to `form_for`, we have to place them inside of an array.
 * In this case, we're not only giving it a new `song` (via `@song`) but also the `artist` we'll be adding it to (via `@artist`).
 * We can also take out the field for `artist_id` since we should be auto-populating that with our associations
 
-```html
-# /views/songs/new.html.erb
-
-<%= form_for [@artist, @song] do |f| %>
-  # form contents
-<% end %>
-```
+![new-song-form](./images/readme-23.png)
 
 That takes care of the form. Now we need to fix the `create` controller action in `songs_controller.rb` so that we can add `songs` to `artists`!
   * We need an `artist` to add a `song` to, right? How do we set that up.
   * How should we modify `@song` so that it's saved to the proper `artist`?
   * Where would it make most sense to redirect to? Let's try the `artist` `show` page -- what path should we use?
 
-```rb
-# /controllers/songs_controller.rb
-
-# create
-def create
-  @artist = Artist.find(params[:artist_id])
-  @song = @artist.songs.create!(song_params)
-
-  redirect_to artist_path(@artist)
-end
-```
+![new-song-create-controller](./images/readme-24.png)
 
 Now you do the rest! Debug the following pages/forms so that they don't generate any errors upon loading/submission.
 * `/views/artists`
