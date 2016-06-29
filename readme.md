@@ -22,7 +22,7 @@ It's our good ol' friend the Rails rMVC diagram!
 
 > The router matches an HTTP request to a controller and action.
 * The gateway to the rMVC (router / model / view / controller).
-* So something like this `get "/artists/2"` is directed to the artists controller show action.
+* So something like this `get "/artists/2"` is directed to the `artists` controller `show` action.
 * Returns an error if the HTTP request is unrecognizable and/or does not match a controller action.
 
 </details>
@@ -58,7 +58,7 @@ get "/artists/:id", to: "artists#show"
 
 </details>
 
----
+
 
 <details>
 <summary>**Q**. At a high level, what happens when we visit `http://localhost:3000/`?  Why?</summary>
@@ -136,15 +136,33 @@ Back to the docs... read about [Path Helpers](http://guides.rubyonrails.org/rout
 
 **Questions**:
 
-- What are Helpers, in general, in Rails?  
-- How do Path Helpers fit into that category?  
-- What do they look like?
-
----
+<!-- What are helpers? -->
+<details>
+<summary>What are Helpers, in general, in Rails?</summary>
 
 > **Helpers** codify Rails conventions.  They write html using Rails or, in the case of custom Helpers, our project's conventions.
 
+</details>
+
+<!-- What are Path Helpers? -->
+<details>
+<summary>How do Path Helpers fit into that category?</summary>
+
 > **Path helpers** are methods which provide the urls (and paths) to a Resource.  We build them using the prefixes from `rake routes`.
+
+</details>
+
+<!-- What do Path helpers look like? -->
+<details>
+<summary>What do Path Helpers look like?</summary>
+
+```
+prefix + _path = Path Helper
+```
+
+</details>
+
+---
 
 Looking at this output from `rake routes`,
 
@@ -152,7 +170,7 @@ Looking at this output from `rake routes`,
 Prefix        Verb   URI Pattern                 Controller#Action
 
 artists       GET    /artists(.:format)          artists#index
-          POST   /artists(.:format)          artists#create
+              POST   /artists(.:format)          artists#create
 new_artist    GET    /artists/new(.:format)      artists#new
 edit_artist   GET    /artists/:id/edit(.:format) artists#edit
 artist        GET    /artists/:id(.:format)      artists#show
@@ -173,6 +191,7 @@ artist        GET    /artists/:id(.:format)      artists#show
 <summary>**Q**: What named route helper will return the path to show an `Artist`?</summary>
 
 > A. `artist_path(@artist)`
+
 > **Note**: to indicate which artist we should show, we need to pass a **reference** to an `artist`.
 
 </details>
@@ -180,7 +199,7 @@ artist        GET    /artists/:id(.:format)      artists#show
 <!-- **Q**. Path Helpers -->
 <details>
 
-<summary>Q: Where do we utilize Path Helpers in Rails?</summary>
+<summary>**Q**: Where do we utilize Path Helpers in Rails?</summary>
 
 > A.  We use Path Helpers in views, controllers, and helpers.
 
@@ -219,16 +238,18 @@ artist        GET    /artists/:id(.:format)      artists#show
 
 http://guides.rubyonrails.org/routing.html#generating-paths-and-urls-from-code
 
-**Q**. What can you expect the `params` hash to look like after we go to the url `/artists/9` in our browser?
----
+<details>
+<summary>**Q**. What can you expect the `params` hash to look like after we go to the url `/artists/9` in our browser?</summary>
 
-``` ruby
+```
 # params
 {  id: "9",
   controller: "artists",
   action: "show"
 }
 ```
+
+</details>
 
 **ProTip**: `params` values are always strings.  ActiveRecord methods (e.g. #find), will convert it to an integer.  This means you can use this in your url `/artists/1-YeahYeahYeahs`.
 
@@ -412,7 +433,7 @@ What do we need to replace this path helper with?
 <h3>Songs <%= link_to "(+)", new_artist_song_path %></h3>
 ```
 
-By nesting resources, `new_song_path` became `new_artist_song_path` since every song we create is now created in the context of an artist.
+By nesting resources, `new_song_path` became `new_artist_song_path` since every `song` we create is now created in the context of an `artist`.
 * But our app is still giving us an error. WHY?!
 
 ![Third error](images/third-error.png)
@@ -429,7 +450,7 @@ You'll notice that we're getting a different error this time that ends with: `mi
 <h3>Songs <%= link_to "(+)", new_artist_song_path( @artist ) %></h3>
 ```
 
-We need to feed our `new_artist_song_path` helper an artist as a variable. Now our app knows which artist it is rendering a new song form for.  
+We need to feed our `new_artist_song_path` helper an `artist` as a **variable**. Now our app knows which `artist` it is rendering a new `song` form for.  
 
 And that'll do it. Let's refresh our page...
 
@@ -467,17 +488,17 @@ Some thoughts:
 </ul>
 ```
 
-From an artist show page, click on a song. You should get an error.
+From an `artist` `show` page, click on a `song`. You should get an error.
 * Try fixing the `songs/show.html.erb` file.
 * **HINT:** You might have to add an instance variable to `songs_controller.rb`.
-  * Remember, our song routes don't look the same as they did before!
+  * Remember, our `song` routes doesn't look the same as they did before!
 
 ### Form Helpers
 
-Something else we'll need to change are forms. Let's try making a new song.
-* From an artist show page, click on the "(+)" next to "Songs".
+Something else we'll need to change are forms. Let's try making a new `song`.
+* From an `artist` `show` page, click on the "(+)" next to "Songs".
 
-No immediate error! But it's not working quite yet. Let's try creating a song.
+No immediate error! But it's not working quite yet. Let's try creating a `song`.
 
 ![Seventh error](images/seventh-error.png)
 
@@ -502,8 +523,8 @@ def new
 end
 ```
 
-We need to associate each new song with an artist. To do that, we need to provide our `form_for` helpers with both an artist and song as arguments.
-* That means we first need to define the artist in question in our controller action. Then we can modify our form.
+We need to associate each new song with an artist. To do that, we need to provide our `form_for` helpers with **both** an `artist` and `song` as arguments.
+* That means we first need to define the `artist` in question in our controller action. Then we can modify our form.
 
 ```rb
 # /controllers/songs_controller.rb
@@ -511,13 +532,14 @@ We need to associate each new song with an artist. To do that, we need to provid
 # new
 def new
   @artist = Artist.find(params[:artist_id])
-  @song = Song.new
+  @song = @artist.songs.new
 end
 ```
 
 Now let's modify our form.
 * When feeding multiple arguments to `form_for`, we have to place them inside of an array.
-* In this case, we're not only giving it a new song (via `@song`) but also the artist we'll be adding it to (via `@artist`).
+* In this case, we're not only giving it a new `song` (via `@song`) but also the `artist` we'll be adding it to (via `@artist`).
+* We can also take out the field for `artist_id` since we should be auto-populating that with our associations
 
 ```html
 # /views/songs/new.html.erb
@@ -527,10 +549,10 @@ Now let's modify our form.
 <% end %>
 ```
 
-That takes care of the form. Now we need to fix the `create` controller action in `songs_controller.rb` so that we can add songs to artists!
-  * We need an artist to add a song to, right? How do we set that up.
-  * How should we modify `@song` so that it's saved to the proper artist?
-  * Where would it make most sense to redirect to? Let's try the artist show page -- what path should be use?
+That takes care of the form. Now we need to fix the `create` controller action in `songs_controller.rb` so that we can add `songs` to `artists`!
+  * We need an `artist` to add a `song` to, right? How do we set that up.
+  * How should we modify `@song` so that it's saved to the proper `artist`?
+  * Where would it make most sense to redirect to? Let's try the `artist` `show` page -- what path should we use?
 
 ```rb
 # /controllers/songs_controller.rb
@@ -538,7 +560,7 @@ That takes care of the form. Now we need to fix the `create` controller action i
 # create
 def create
   @artist = Artist.find(params[:artist_id])
-  @song = @artist.songs.create(song_params)
+  @song = @artist.songs.create!(song_params)
 
   redirect_to artist_path(@artist)
 end
@@ -558,7 +580,7 @@ It seems pretty daunting, but you won't have to change anything beyond link help
 * If you feel lost, follow the error.
 * Don't worry if you don't get to all of them.
 * Strongly encourage you to work with each other on this.
-* Me and the support instructor are also here to help.
+* The instructors are also here to help.
 
 ## BREAK (10 min)
 
@@ -567,7 +589,7 @@ It seems pretty daunting, but you won't have to change anything beyond link help
 * [The Lowdown On Routes](https://blog.engineyard.com/2010/the-lowdown-on-routes-in-rails-3)
 * [Scoping Rails Routes](http://notahat.com/2014/02/05/scoping-rails-routes.html)
 
-Spend the remaining class-time either working on your homework or you can ask me questions on anything you've learned this week.
+Spend the remaining class-time either working on your homework or ask us questions on anything you've learned this week.
 
 ## Conclusion
 
