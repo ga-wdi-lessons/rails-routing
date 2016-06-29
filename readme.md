@@ -47,9 +47,7 @@ and then map those routes to their appropriate controller actions.
 get "/artists", to: "artists#index"
 ```
 
-<details>
-
----
+</details>
 
 <details>
 <summary>**Q**. And the `show` page for a `song`?</summary>
@@ -72,7 +70,6 @@ get "/artists/:id", to: "artists#show"
 ```rb
 root to: "artists#index"
 ```
-
 
 ## What Routes? (10 min)
 
@@ -100,7 +97,6 @@ GET        /artists/:id      artists#show
 PATCH      /artists/:id      artists#update
 PUT        /artists/:id      artists#update
 DELETE     /artists/:id      artists#destroy
-
 ```
 
 ### `rake routes`
@@ -127,7 +123,6 @@ song          GET    /songs/:id(.:format)        songs#show
           PUT    /songs/:id(.:format)        songs#update
           DELETE /songs/:id(.:format)        songs#destroy
 ```
-
 
 ## Named Route Helpers
 
@@ -252,11 +247,11 @@ Review the output of `rake routes`.
 
 ## Nested Resources (15 min)
 
-The way our app is currently routed is fine. Songs and artists have their very own resources and doesn't depend on the other. We can, however, change our domain a bit.  We can make `Songs` depend on their `Artist`. We indicate, and control this, by nesting our resources. We want to be able to visit urls like this:
+The way our app is currently routed is fine. `Songs` and `artists` have their very own resources and doesn't depend on the other. We can, however, change our domain a bit.  We can make `Songs` depend on their `Artist`. We indicate, and control this, by nesting our resources. We want to be able to visit urls like this:
 
 `http://www.tu.nr/artists/3/songs/12`
 
-* Currently we can visit an artist show page, which includes a link of all that artist's songs.
+* Currently we can visit an `artist` `show` page, which includes a link of all that `artist`'s `songs`.
 
 **Q**. What would it mean to have a URL like that? Why do we do it this way?
 ---
@@ -278,14 +273,14 @@ So our ideal `Song` `index` will look something like this...
 get "/artists/:id/songs" to "songs#index"
 ```
 
-And our show route will look something like this...
+And our `show` route will look something like this...
 
 ```rb
 # songs#show
 get "/artists/:id/songs/:id" to "songs#show"
 ```
 
-**Q**. Given this route `artists/7/songs/14`, what do you think would be in the params hash for this route?
+**Q**. Given this route `artists/7/songs/14`, what do you think would be in the `params` hash for this route?
 ---
 
 > `params = { id:}`
@@ -330,7 +325,6 @@ That's okay. You're going to spend the next hour fixing it!
 * Look through your application and think about what we need to change in order to accommodate our new routing system.
 * Don't worry about solving the problem immediately. Start by identifying files we need to change.
 
-
 ### Let's look at `rake routes` again...
 
 **Q**. Has anything changed?
@@ -369,15 +363,14 @@ Having seen this, let's make a To-Do list of things to change in our Rails app s
   2. Form Helpers  
   3. Songs Controller  
 
-
 ## YOU DO: Fix the app!
 
-  For the rest of the class we'll be working to fix the app.  Feel free to follow along, or go at your own pace.
+For the rest of the class we'll be working to fix the app.  Feel free to follow along, or go at your own pace.
 
-  ### Bonuses
-  If you find yourself moving along faster than my pace, try implementing the following...
-  * A third model for Genre that has a `belongs_to` relationship with Artists.
-  * There are also some advanced topics included in "Additional Reading" at the bottom of the lesson plan.
+#### Bonuses
+If you find yourself moving along faster than my pace, try implementing the following...
+* A third model for `Genre` that has a `belongs_to` relationship with `Artists`.
+* There are also some advanced topics included in "Additional Reading" at the bottom of the lesson plan.
 
 ### Let's take another look at that error...
 
@@ -389,7 +382,6 @@ Having seen this, let's make a To-Do list of things to change in our Rails app s
 > A. **DELETE IT**.
 * The original link took us to a list of all the songs in our application.
 * While getting rid of it may be a bad move from a usability standpoint, by implementing nested resources we made the decision that songs will never exist independent from an artist.
-
 
 ### Let's click on an artist...
 
@@ -417,7 +409,6 @@ What do we need to replace this path helper with?
 By nesting resources, `new_song_path` became `new_artist_song_path` since every song we create is now created in the context of an artist.
 * But our app is still giving us an error. WHY?!
 
-
 ![Third error](images/third-error.png)
 
 You'll notice that we're getting a different error this time that ends with: `missing required keys: [:artist_id]`
@@ -435,7 +426,6 @@ You'll notice that we're getting a different error this time that ends with: `mi
 We need to feed our `new_artist_song_path` helper an artist as a variable. Now our app knows which artist it is rendering a new song form for.  
 
 And that'll do it. Let's refresh our page...
-
 
 ![Fourth Error](images/fourth-error.png)
 
@@ -471,12 +461,10 @@ Some thoughts:
 </ul>
 ```
 
-
 From an artist show page, click on a song. You should get an error.
 * Try fixing the `songs/show.html.erb` file.
 * **HINT:** You might have to add an instance variable to `songs_controller.rb`.
   * Remember, our song routes don't look the same as they did before!
-
 
 ### Form Helpers
 
@@ -533,7 +521,6 @@ Now let's modify our form.
 <% end %>
 ```
 
-
 That takes care of the form. Now we need to fix the `create` controller action in `songs_controller.rb` so that we can add songs to artists!
   * We need an artist to add a song to, right? How do we set that up.
   * How should we modify `@song` so that it's saved to the proper artist?
@@ -551,7 +538,6 @@ def create
 end
 ```
 
-
 Now you do the rest! Debug the following pages/forms so that they don't generate any errors upon loading/submission.
 * `/views/artists`
   * `edit.html.erb`
@@ -568,19 +554,14 @@ It seems pretty daunting, but you won't have to change anything beyond link help
 * Strongly encourage you to work with each other on this.
 * Me and the support instructor are also here to help.
 
-
 ## BREAK (10 min)
-
 
 ## Additional (Optional) Reading
 * [Rails Routing From The Outside In](http://guides.rubyonrails.org/routing.html)
 * [The Lowdown On Routes](https://blog.engineyard.com/2010/the-lowdown-on-routes-in-rails-3)
 * [Scoping Rails Routes](http://notahat.com/2014/02/05/scoping-rails-routes.html)
 
-
-
 Spend the remaining class-time either working on your homework or you can ask me questions on anything you've learned this week.
-
 
 ## Conclusion
 
