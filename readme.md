@@ -2,15 +2,14 @@
 
 ## Learning Objectives (5 min)
 
-* Review the relationship between HTTP requests and controller actions.
+* Review the relationship between HTTP requests and Controller actions.
 * Identify the role a router (`routes.rb`) plays in the Rails MVC model.
-* Create routes for individual pages in Rails.
 * Use resources to define routes for a RESTful controller.
-* Use rake routes to display RESTful routes.
+* Use `rake routes` to display RESTful routes.
 * Implement route names in Rails link helpers.
 * Implement nested routes in a Rails application.
 * Describe how path helpers work for nested routes.
-* Implement form_for to build a form for a nested resource.
+* Implement `form_for` to build a form for a nested resource.
 
 ## The Router (5 min)
 
@@ -61,7 +60,8 @@ get "/artists/:id", to: "artists#show"
 
 ---
 
-## TPS: What happens when we visit "http://localhost:3000/"?  Why? (1/2/2, 5 min)
+<details>
+<summary>**Q**. At a high level, what happens when we visit `http://localhost:3000/`?  Why?</summary>
 
 > A. We see a listing of Artists.
 
@@ -70,6 +70,8 @@ get "/artists/:id", to: "artists#show"
 ```rb
 root to: "artists#index"
 ```
+
+</details>
 
 ## What Routes? (10 min)
 
@@ -107,21 +109,21 @@ DELETE     /artists/:id      artists#destroy
 Prefix        Verb   URI Pattern                 Controller#Action
 
 artists       GET    /artists(.:format)          artists#index
-          POST   /artists(.:format)          artists#create
+              POST   /artists(.:format)          artists#create
 new_artist    GET    /artists/new(.:format)      artists#new
 edit_artist   GET    /artists/:id/edit(.:format) artists#edit
 artist        GET    /artists/:id(.:format)      artists#show
-          PATCH  /artists/:id(.:format)      artists#update
-          PUT    /artists/:id(.:format)      artists#update
-          DELETE /artists/:id(.:format)      artists#destroy
+              PATCH  /artists/:id(.:format)      artists#update
+              PUT    /artists/:id(.:format)      artists#update
+              DELETE /artists/:id(.:format)      artists#destroy
 songs         GET    /songs(.:format)            songs#index
-          POST   /songs(.:format)            songs#create
+              POST   /songs(.:format)            songs#create
 new_song      GET    /songs/new(.:format)        songs#new
 edit_song     GET    /songs/:id/edit(.:format)   songs#edit
 song          GET    /songs/:id(.:format)        songs#show
-          PATCH  /songs/:id(.:format)        songs#update
-          PUT    /songs/:id(.:format)        songs#update
-          DELETE /songs/:id(.:format)        songs#destroy
+              PATCH  /songs/:id(.:format)        songs#update
+              PUT    /songs/:id(.:format)        songs#update
+              DELETE /songs/:id(.:format)        songs#destroy
 ```
 
 ## Named Route Helpers
@@ -159,7 +161,7 @@ artist        GET    /artists/:id(.:format)      artists#show
 <!-- Artists Index url  -->
 <details>
 
-<summary>Q: What named route helper will return the url to list all `Artists`?</summary>
+<summary>**Q**: What named route helper will return the url to list all `Artists`?</summary>
 
 > A. `artists_url`
 
@@ -168,7 +170,7 @@ artist        GET    /artists/:id(.:format)      artists#show
 <!-- **Q**. Artist Show helper  -->
 <details>
 
-<summary>Q: What named route helper will return the path to show an `Artist`?</summary>
+<summary>**Q**: What named route helper will return the path to show an `Artist`?</summary>
 
 > A. `artist_path(@artist)`
 > **Note**: to indicate which artist we should show, we need to pass a **reference** to an `artist`.
@@ -179,11 +181,12 @@ artist        GET    /artists/:id(.:format)      artists#show
 <details>
 
 <summary>Q: Where do we utilize Path Helpers in Rails?</summary>
----
 
 > A.  We use Path Helpers in views, controllers, and helpers.
 
 </details>
+
+<!-- Q. Why not models? -->
 
 <details>
 <summary>**Q**. Why not in models?</summary>
@@ -201,7 +204,9 @@ artist        GET    /artists/:id(.:format)      artists#show
 
 </details>
 
+<!-- Why?  -->
 <details>
+
 <summary>**Q**. Why?</summary>
 
 > A. The web expects it.  https://www.viget.com/articles/rails-named-routes-path-vs-url
@@ -338,21 +343,21 @@ That's okay. You're going to spend the next hour fixing it!
 Prefix            Verb   URI Pattern                                  Controller#Action
 root              GET    /                                            artists#index
 artist_songs      GET    /artists/:artist_id/songs(.:format)          songs#index
-             POST   /artists/:artist_id/songs(.:format)          songs#create
+                  POST   /artists/:artist_id/songs(.:format)          songs#create
 new_artist_song   GET    /artists/:artist_id/songs/new(.:format)      songs#new
 edit_artist_song  GET    /artists/:artist_id/songs/:id/edit(.:format) songs#edit
 artist_song       GET    /artists/:artist_id/songs/:id(.:format)      songs#show
-             PATCH  /artists/:artist_id/songs/:id(.:format)      songs#update
-             PUT    /artists/:artist_id/songs/:id(.:format)      songs#update
-             DELETE /artists/:artist_id/songs/:id(.:format)      songs#destroy
+                  PATCH  /artists/:artist_id/songs/:id(.:format)      songs#update
+                  PUT    /artists/:artist_id/songs/:id(.:format)      songs#update
+                  DELETE /artists/:artist_id/songs/:id(.:format)      songs#destroy
 artists           GET    /artists(.:format)                           artists#index
-             POST   /artists(.:format)                           artists#create
+                  POST   /artists(.:format)                           artists#create
 new_artist        GET    /artists/new(.:format)                       artists#new
 edit_artist       GET    /artists/:id/edit(.:format)                  artists#edit
 artist            GET    /artists/:id(.:format)                       artists#show
-             PATCH  /artists/:id(.:format)                       artists#update
-             PUT    /artists/:id(.:format)                       artists#update
-             DELETE /artists/:id(.:format)                       artists#destroy
+                  PATCH  /artists/:id(.:format)                       artists#update
+                  PUT    /artists/:id(.:format)                       artists#update
+                  DELETE /artists/:id(.:format)                       artists#destroy
 ```
 
 **Q**. Are we going to need to change anything in our app?
@@ -368,6 +373,7 @@ Having seen this, let's make a To-Do list of things to change in our Rails app s
 For the rest of the class we'll be working to fix the app.  Feel free to follow along, or go at your own pace.
 
 #### Bonuses
+
 If you find yourself moving along faster than my pace, try implementing the following...
 * A third model for `Genre` that has a `belongs_to` relationship with `Artists`.
 * There are also some advanced topics included in "Additional Reading" at the bottom of the lesson plan.
