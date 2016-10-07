@@ -5,7 +5,7 @@
 * Review the relationship between HTTP requests and Controller actions.
 * Identify the role a router (`routes.rb`) plays in the Rails MVC model.
 * Use resources to define routes for a RESTful controller.
-* Use `rake routes` to display RESTful routes.
+* Use `rails routes` to display RESTful routes.
 * Implement route names in Rails link helpers.
 * Implement nested routes in a Rails application.
 * Describe how path helpers work for nested routes.
@@ -48,7 +48,7 @@ get "/artists", to: "artists#index"
 </details>
 
 <details>
-<summary>**Q**. And the `show` page for a `song`?</summary>
+<summary>**Q**. And the `show` page for an `artist`?</summary>
 
 ```rb
 # show
@@ -80,18 +80,18 @@ Rails docs are awesome!  Familiarize yourself with the command and the output.
 
 http://guides.rubyonrails.org/routing.html#inspecting-and-testing-routes
 
-> To get a complete list of the available routes in your application, visit http://localhost:3000/rails/info/routes in your browser while your server is running in the **development** environment. You can also execute the `rake routes` command in your terminal.
+> To get a complete list of the available routes in your application, visit http://localhost:3000/rails/info/routes in your browser while your server is running in the **development** environment. You can also execute the `rails routes` command in your terminal.
 
 Here's some simplified output.  We've removed some data to focus on the HTTP Verb, the URI Pattern, and the Controller Action.
 Note the "root" route and the duplication.  A combination of HTTP Verb (or Method) and URI (or Path) are required to identify a specific Controller Action.
 
 ![artist-resources](./images/readme-3.png)
 
-### `rake routes`
+### `rails routes`
 
-* Open up your terminal and, in the same folder as your application, type in `rake routes`.  You should see something like this.
+* Open up your terminal and, in the same folder as your application, type in `rails routes`.  You should see something like this.
 
-![rake-routes](./images/readme-4.png)
+![rails-routes](./images/readme-4.png)
 
 ## Named Route Helpers
 
@@ -115,7 +115,7 @@ Back to the docs... read about [Path Helpers](http://guides.rubyonrails.org/rout
 <details>
 <summary>How do Path Helpers fit into that category?</summary>
 
-> **Path helpers** are methods which provide the urls (and paths) to a Resource.  We build them using the prefixes from `rake routes`.
+> **Path helpers** are methods which provide the urls (and paths) to a Resource.  We build them using the prefixes from `rails routes`.
 
 </details>
 
@@ -131,9 +131,9 @@ prefix + _path = Path Helper
 
 ---
 
-Looking at this output from `rake routes`,
+Looking at this output from `rails routes`,
 
-![artist-rake-routes](./images/readme-6.png)
+![artist-rails-routes](./images/readme-6.png)
 
 <!-- Artists Index url  -->
 <details>
@@ -225,7 +225,7 @@ These lines:
 * Generates path helpers.
 * `resources` creates routes using a combination of REST and Rails conventions.  It assumes properly named controllers -- in this case, `artists_controller.rb` and `songs_controller.rb` -- and actions.
 
-Let's review the output of `rake routes`.
+Let's review the output of `rails routes`.
 
 ## Nested Resources (15 min)
 
@@ -291,7 +291,7 @@ That's okay. You're going to spend the next hour fixing it!
 * Look through your application and think about what we need to change in order to accommodate our new routing system.
 * Don't worry about solving the problem immediately. Start by identifying files we need to change.
 
-### Let's look at `rake routes` again...
+### Let's look at `rails routes` again...
 
 **Q**. Has anything changed?
 ---
@@ -300,7 +300,7 @@ That's okay. You're going to spend the next hour fixing it!
 * Our Song path helpers are now prefixed with artist (e.g., `artist_songs`, `new_artist_song`).
 * Our controller actions are the same.
 
-![new-rake-routes](./images/readme-14.png)
+![new-rails-routes](./images/readme-14.png)
 
 
 **Q**. Are we going to need to change anything in our app?
@@ -344,7 +344,7 @@ Our app does not like the `new_song_path` we used in a link helper in our `artis
 
 
 What do we need to replace this path helper with?
-* **HINT:** Look at `rake routes`!
+* **HINT:** Look at `rails routes`!
 
 ![new-song-path](./images/readme-16.png)
 
