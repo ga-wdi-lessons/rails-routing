@@ -253,7 +253,7 @@ The way our app is currently routed is fine. `Songs` and `artists` have their ve
   * It concisely reflects our data structure: all `songs` are dependent on an `artist`.
   * Also allows users to access specific information using the URL.
 
-Ultimately, we want to structure our routes so that all `Songs` exist in the context of a parent `Artist`.
+Ultimately, we want to structure our routes so that all `Songs` exist only within the context of an `Artist`.
 
 > The reasons might not be so apparent for routes like `show`, `edit`, `update` and `destroy` because we have access to a `song` ID in the url anyway. But by using nested resources, it's easier to create a `song` because we have the `artists` id in the url. Or maybe we want the `songs` index route to be namespaced under an `artist`. We can **ensure** that a `Song` is associated with a specific `Artist`.
 
