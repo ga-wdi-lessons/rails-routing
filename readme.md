@@ -76,7 +76,7 @@ root to: "artists#index"
 Q: How do we find out what routes our app handles requests for?
 ---
 
-Rails docs are awesome!  Familiarize yourself with the command and the output.
+Rails docs are awesome!  Familiarize yourself with the methods for listing a Rails application's routes:
 
 http://guides.rubyonrails.org/routing.html#inspecting-and-testing-routes
 
@@ -164,12 +164,23 @@ Looking at this output from `rails routes`,
 
 </details>
 
+
+
 <!-- Q. Why not models? -->
 
 <details>
 <summary>**Q**. Why not in models?</summary>
 
 > A. Models do not usually know about their place within the request/response cycle.  They are focused on the Business Rules and Persistence, not the User Interaction.
+
+</details>
+
+<!-- **Q**. Path Helpers & Verbs -->
+<details>
+
+<summary>**Q**: Why are there path-prefixes only for GET requests? </summary>
+
+> A.  These path-prefixes are provided by rails to trigger a controller method which renders a view
 
 </details>
 
