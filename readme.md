@@ -160,7 +160,7 @@ Looking at this output from `rails routes`,
 
 <summary>**Q**: Where do we utilize Path Helpers in Rails?</summary>
 
-> A.  We use Path Helpers in views, controllers, and helpers.
+> A.  We use Path Helpers in views and controllers.
 
 </details>
 
