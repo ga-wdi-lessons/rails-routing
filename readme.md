@@ -76,7 +76,7 @@ root to: "artists#index"
 Q: How do we find out what routes our app handles requests for?
 ---
 
-Rails docs are awesome!  Familiarize yourself with the command and the output.
+Rails docs are awesome!  Familiarize yourself with the methods for listing a Rails application's routes:
 
 http://guides.rubyonrails.org/routing.html#inspecting-and-testing-routes
 
@@ -160,9 +160,11 @@ Looking at this output from `rails routes`,
 
 <summary>**Q**: Where do we utilize Path Helpers in Rails?</summary>
 
-> A.  We use Path Helpers in views, controllers, and helpers.
+> A.  We use Path Helpers in views and controllers.
 
 </details>
+
+
 
 <!-- Q. Why not models? -->
 
@@ -170,6 +172,15 @@ Looking at this output from `rails routes`,
 <summary>**Q**. Why not in models?</summary>
 
 > A. Models do not usually know about their place within the request/response cycle.  They are focused on the Business Rules and Persistence, not the User Interaction.
+
+</details>
+
+<!-- **Q**. Path Helpers & Verbs -->
+<details>
+
+<summary>**Q**: Why are there path-prefixes only for GET requests? </summary>
+
+> A.  These path-prefixes are provided by rails to trigger a controller method which renders a view
 
 </details>
 
@@ -229,7 +240,7 @@ Let's review the output of `rails routes`.
 
 ## Nested Resources (15 min)
 
-The way our app is currently routed is fine. `Songs` and `artists` have their very own resources and doesn't depend on the other. We can, however, change our domain a bit.  We can make `Songs` depend on their `Artist`. We indicate, and control this, by nesting our resources. We want to be able to visit urls like this:
+The way our app is currently routed is fine. `Songs` and `Artists` have their very own resources and doesn't depend on the other. We can, however, change our domain a bit.  We can make `Songs` depend on their `Artist`. We indicate, and control this, by nesting our resources. We want to be able to visit urls like this:
 
 `http://www.tu.nr/artists/3/songs/12`
 
@@ -242,7 +253,7 @@ The way our app is currently routed is fine. `Songs` and `artists` have their ve
   * It concisely reflects our data structure: all `songs` are dependent on an `artist`.
   * Also allows users to access specific information using the URL.
 
-Ultimately, we want to structure our routes so that all `Songs` exist in the context of a parent `Artist`.
+Ultimately, we want to structure our routes so that all `Songs` exist only within the context of an `Artist`.
 
 > The reasons might not be so apparent for routes like `show`, `edit`, `update` and `destroy` because we have access to a `song` ID in the url anyway. But by using nested resources, it's easier to create a `song` because we have the `artists` id in the url. Or maybe we want the `songs` index route to be namespaced under an `artist`. We can **ensure** that a `Song` is associated with a specific `Artist`.
 
@@ -446,6 +457,6 @@ Spend the remaining class-time either working on your homework or ask us questio
 
 ## Conclusion
 
-- List the routes provided using the `resources :person` method and the associated action for each
+- List the routes provided using the `resources` method and the associated action for each
 - Why would we nest resource routes?
 - How can we see the routes our app supports?
