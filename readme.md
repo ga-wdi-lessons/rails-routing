@@ -240,7 +240,7 @@ Let's review the output of `rails routes`.
 
 ## Nested Resources (15 min)
 
-The way our app is currently routed is fine. `Songs` and `artists` have their very own resources and doesn't depend on the other. We can, however, change our domain a bit.  We can make `Songs` depend on their `Artist`. We indicate, and control this, by nesting our resources. We want to be able to visit urls like this:
+The way our app is currently routed is fine. `Songs` and `Artists` have their very own resources and doesn't depend on the other. We can, however, change our domain a bit.  We can make `Songs` depend on their `Artist`. We indicate, and control this, by nesting our resources. We want to be able to visit urls like this:
 
 `http://www.tu.nr/artists/3/songs/12`
 
