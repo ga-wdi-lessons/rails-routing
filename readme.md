@@ -457,6 +457,6 @@ Spend the remaining class-time either working on your homework or ask us questio
 
 ## Conclusion
 
-- List the routes provided using the `resources :person` method and the associated action for each
+- List the routes provided using the `resources` method and the associated action for each
 - Why would we nest resource routes?
 - How can we see the routes our app supports?
