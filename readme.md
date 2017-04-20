@@ -18,7 +18,7 @@ It's our good ol' friend the Rails rMVC diagram!
 ![https://camo.githubusercontent.com/b17f7f6527eb7d35474e24ed3ff299b8689615a0/687474703a2f2f692e737461636b2e696d6775722e636f6d2f5366324f512e706e67](https://camo.githubusercontent.com/b17f7f6527eb7d35474e24ed3ff299b8689615a0/687474703a2f2f692e737461636b2e696d6775722e636f6d2f5366324f512e706e67)
 
 <details>
-<summary>Q: Who can walk us through the rMVC pattern, highlighting where the router is and what it does?</summary>
+<summary><strong>Q: Who can walk us through the rMVC pattern, highlighting where the router is and what it does?<strong></summary>
 
 > The router matches an HTTP request to a controller and action.
 * The gateway to the rMVC (router / model / view / controller).
@@ -38,7 +38,7 @@ Rails application. In this file we define all the known routes of our applicatio
 and then map those routes to their appropriate controller actions.
 
 <details>
-<summary>**Q**. What does the individual route to the `index` page for `artists` look like?</summary>
+<summary><strong>Q. What does the individual route to the `index` page for `artists` look like?</strong></summary>
 
 ```rb
 # index
@@ -48,7 +48,7 @@ get "/artists", to: "artists#index"
 </details>
 
 <details>
-<summary>**Q**. And the `show` page for an `artist`?</summary>
+<summary><strong>Q. And the `show` page for an `artist`?<strong></summary>
 
 ```rb
 # show
@@ -59,7 +59,7 @@ get "/artists/:id", to: "artists#show"
 
 
 <details>
-<summary>**Q**. At a high level, what happens when we visit `http://localhost:3000/`?  Why?</summary>
+<summary><strong>Q. At a high level, what happens when we visit `http://localhost:3000/`?  Why?<strong></summary>
 
 > A. We see a listing of Artists.
 
@@ -115,7 +115,7 @@ Back to the docs... read about [Path Helpers](http://guides.rubyonrails.org/rout
 <details>
 <summary>How do Path Helpers fit into that category?</summary>
 
-> **Path helpers** are methods which provide the urls (and paths) to a Resource.  We build them using the prefixes from `rails routes`.
+> **Path helpers** are methods which provide the paths to a Resource.  We build them using the prefixes from `rails routes`.
 
 </details>
 
@@ -138,7 +138,7 @@ Looking at this output from `rails routes`,
 <!-- Artists Index url  -->
 <details>
 
-<summary>**Q**: What named route helper will return the url to list all `Artists`?</summary>
+<summary><strong>Q: What named route helper will return the url to list all `Artists`?<strong></summary>
 
 > A. `artists_url`
 
@@ -147,7 +147,7 @@ Looking at this output from `rails routes`,
 <!-- **Q**. Artist Show helper  -->
 <details>
 
-<summary>**Q**: What named route helper will return the path to show an `Artist`?</summary>
+<summary><strong>Q: What named route helper will return the path to show an `Artist`?<strong></summary>
 
 > A. `artist_path(@artist)`
 
@@ -158,7 +158,7 @@ Looking at this output from `rails routes`,
 <!-- **Q**. Path Helpers -->
 <details>
 
-<summary>**Q**: Where do we utilize Path Helpers in Rails?</summary>
+<summary><strong>Q: Where do we utilize Path Helpers in Rails?<strong></summary>
 
 > A.  We use Path Helpers in views and controllers.
 
@@ -169,7 +169,7 @@ Looking at this output from `rails routes`,
 <!-- Q. Why not models? -->
 
 <details>
-<summary>**Q**. Why not in models?</summary>
+<summary><strong>Q. Why not in models?<strong></summary>
 
 > A. Models do not usually know about their place within the request/response cycle.  They are focused on the Business Rules and Persistence, not the User Interaction.
 
@@ -178,7 +178,7 @@ Looking at this output from `rails routes`,
 <!-- **Q**. Path Helpers & Verbs -->
 <details>
 
-<summary>**Q**: Why are there path-prefixes only for GET requests? </summary>
+<summary><strong>Q: Why are there path-prefixes only for GET requests? <strong></summary>
 
 > A.  These path-prefixes are provided by rails to trigger a controller method which renders a view
 
@@ -187,7 +187,7 @@ Looking at this output from `rails routes`,
 <!-- **Q**. _Path and _Url  -->
 <details>
 
-<summary>**Q**. When do we use the `_path` helper? The `_url` helper?</summary>
+<summary><strong>Q. When do we use the `_path` helper? The `_url` helper?<strong></summary>
 
 > A. We use `_url` helpers when redirecting.  Use `_path` for everything else.
 
@@ -196,7 +196,7 @@ Looking at this output from `rails routes`,
 <!-- Why?  -->
 <details>
 
-<summary>**Q**. Why?</summary>
+<summary><strong>Q. Why?<strong></summary>
 
 > A. The web expects it.  https://www.viget.com/articles/rails-named-routes-path-vs-url
 
@@ -209,7 +209,7 @@ Looking at this output from `rails routes`,
 http://guides.rubyonrails.org/routing.html#generating-paths-and-urls-from-code
 
 <details>
-<summary>**Q**. What can you expect the `params` hash to look like after we go to the url `/artists/9` in our browser?</summary>
+<summary><strong>Q. What can you expect the `params` hash to look like after we go to the url `/artists/9` in our browser?</strong></summary>
 
 ```rb
 # params
